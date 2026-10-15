@@ -1,0 +1,84 @@
+:root {
+    --primary: #ff4d6d;
+    --secondary: #ff758f;
+    --bg-dark: #0f051d;
+    --card-bg: rgba(25, 10, 40, 0.85);
+    --text-light: #fff0f5;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
+
+body {
+    background: linear-gradient(135deg, #0f051d, #2b0c3f);
+    color: var(--text-light);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+    position: relative;
+}
+
+.container { width: 90%; max-width: 650px; z-index: 10; text-align: center; position: relative; padding: 20px; }
+.card { background: var(--card-bg); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 24px; padding: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); margin: 15px 0; }
+.hidden { display: none !important; }
+
+.btn {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white; border: none; padding: 12px 28px; border-radius: 50px; font-size: 1.1rem; font-weight: 700; cursor: pointer;
+    box-shadow: 0 8px 20px rgba(255, 77, 109, 0.4); transition: all 0.3s ease; margin-top: 15px; display: inline-block;
+}
+.btn:hover { transform: translateY(-3px) scale(1.03); }
+
+input, textarea {
+    width: 100%; padding: 12px; margin: 8px 0; border-radius: 12px; border: 1px solid rgba(255,255,255,0.3); background: rgba(0,0,0,0.5); color: white; font-size: 1rem; text-align: center;
+}
+
+.file-label { display: block; background: rgba(255,255,255,0.1); padding: 12px; border-radius: 12px; margin: 10px 0; cursor: pointer; border: 1px dashed var(--secondary); font-size: 0.95rem; font-weight: 600; }
+.error-msg { color: #ff4d4d; font-weight: bold; margin-top: 10px; }
+
+/* المشهد السينمائي */
+#matrixCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; opacity: 0.3; }
+.cinematic-scene { position: relative; min-height: 320px; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 2; }
+
+.heart-grid {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; max-width: 320px; margin: 10px auto; font-size: 0.85rem; font-weight: bold; color: #ff758f;
+    text-shadow: 0 0 10px rgba(255, 77, 109, 0.8); opacity: 0; transform: scale(0.5); transition: all 1.2s ease;
+}
+.heart-grid.show { opacity: 1; transform: scale(1); }
+
+.hug-art-container {
+    opacity: 0; transform: translateY(20px); transition: all 1.5s ease; margin-top: 15px;
+}
+.hug-art-container.show { opacity: 1; transform: translateY(0); }
+
+.forever-text {
+    font-family: 'Great Vibes', cursive;
+    font-size: 2.2rem;
+    color: #ff758f;
+    text-shadow: 0 0 12px rgba(255, 117, 143, 0.8);
+    margin-bottom: 10px;
+    direction: ltr;
+}
+
+.hug-svg {
+    width: 140px;
+    height: 140px;
+    fill: none;
+    stroke: #ff4d6d;
+    stroke-width: 2;
+    stroke-linecap: round;
+    filter: drop-shadow(0 0 8px rgba(255, 77, 109, 0.6));
+}
+
+.album-container { position: relative; width: 260px; height: 330px; margin: 15px auto; perspective: 1000px; }
+.album-card { position: absolute; width: 100%; height: 100%; border-radius: 16px; overflow: hidden; border: 4px solid white; box-shadow: 0 10px 25px rgba(0,0,0,0.5); background: #000; cursor: pointer; }
+.album-card img { width: 100%; height: 100%; object-fit: cover; }
+
+.envelope { width: 160px; height: 110px; background: #ff758f; margin: 20px auto; position: relative; border-radius: 8px; cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.4); display: flex; justify-content: center; align-items: center; }
+.envelope::before { content: ''; position: absolute; top: 0; border-left: 80px solid transparent; border-right: 80px solid transparent; border-top: 55px solid #ff4d6d; }
+.envelope-heart { font-size: 2rem; color: white; z-index: 2; }
+
+.stack-showcase { position: relative; width: 280px; height: 350px; margin: 15px auto; }
+.stack-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 20px; object-fit: cover; border: 5px solid white; box-shadow: 0 15px 30px rgba(0,0,0,0.6); opacity: 0; transform: scale(0.8) rotate(-5deg); transition: all 1s ease; }
+.stack-img.active { opacity: 1; transform: scale(1) rotate(0deg); }
