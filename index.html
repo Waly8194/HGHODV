@@ -5,9 +5,94 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مفاجأة خاصة جداً ❤️</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&family=Amiri:ital,wght@0,700;1,400&family=Great+Vibes&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <!-- مكتبة توليد الـ QR Code السريعة -->
+    <!-- مكتبة توليد الباركود (QR Code) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        :root {
+            --primary: #ff4d6d;
+            --secondary: #ff758f;
+            --bg-dark: #0f051d;
+            --card-bg: rgba(25, 10, 40, 0.85);
+            --text-light: #fff0f5;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
+
+        body {
+            background: linear-gradient(135deg, #0f051d, #2b0c3f);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .container { width: 90%; max-width: 650px; z-index: 10; text-align: center; position: relative; padding: 20px; }
+        .card { background: var(--card-bg); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 24px; padding: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); margin: 15px 0; }
+        .hidden { display: none !important; }
+
+        .btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white; border: none; padding: 12px 28px; border-radius: 50px; font-size: 1.1rem; font-weight: 700; cursor: pointer;
+            box-shadow: 0 8px 20px rgba(255, 77, 109, 0.4); transition: all 0.3s ease; margin-top: 15px; display: inline-block;
+        }
+        .btn:hover { transform: translateY(-3px) scale(1.03); }
+
+        input, textarea {
+            width: 100%; padding: 12px; margin: 8px 0; border-radius: 12px; border: 1px solid rgba(255,255,255,0.3); background: rgba(0,0,0,0.5); color: white; font-size: 1rem; text-align: center;
+        }
+
+        .file-label { display: block; background: rgba(255,255,255,0.1); padding: 12px; border-radius: 12px; margin: 10px 0; cursor: pointer; border: 1px dashed var(--secondary); font-size: 0.95rem; font-weight: 600; }
+        .error-msg { color: #ff4d4d; font-weight: bold; margin-top: 10px; }
+
+        /* المشهد السينمائي */
+        #matrixCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; opacity: 0.3; }
+        .cinematic-scene { position: relative; min-height: 320px; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 2; }
+
+        .heart-grid {
+            display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; max-width: 320px; margin: 10px auto; font-size: 0.85rem; font-weight: bold; color: #ff758f;
+            text-shadow: 0 0 10px rgba(255, 77, 109, 0.8); opacity: 0; transform: scale(0.5); transition: all 1.2s ease;
+        }
+        .heart-grid.show { opacity: 1; transform: scale(1); }
+
+        .hug-art-container {
+            opacity: 0; transform: translateY(20px); transition: all 1.5s ease; margin-top: 15px;
+        }
+        .hug-art-container.show { opacity: 1; transform: translateY(0); }
+
+        .forever-text {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.2rem;
+            color: #ff758f;
+            text-shadow: 0 0 12px rgba(255, 117, 143, 0.8);
+            margin-bottom: 10px;
+            direction: ltr;
+        }
+
+        .hug-svg {
+            width: 140px;
+            height: 140px;
+            fill: none;
+            stroke: #ff4d6d;
+            stroke-width: 2;
+            stroke-linecap: round;
+            filter: drop-shadow(0 0 8px rgba(255, 77, 109, 0.6));
+        }
+
+        .album-container { position: relative; width: 260px; height: 330px; margin: 15px auto; perspective: 1000px; }
+        .album-card { position: absolute; width: 100%; height: 100%; border-radius: 16px; overflow: hidden; border: 4px solid white; box-shadow: 0 10px 25px rgba(0,0,0,0.5); background: #000; cursor: pointer; }
+        .album-card img { width: 100%; height: 100%; object-fit: cover; }
+
+        .envelope { width: 160px; height: 110px; background: #ff758f; margin: 20px auto; position: relative; border-radius: 8px; cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.4); display: flex; justify-content: center; align-items: center; }
+        .envelope::before { content: ''; position: absolute; top: 0; border-left: 80px solid transparent; border-right: 80px solid transparent; border-top: 55px solid #ff4d6d; }
+        .envelope-heart { font-size: 2rem; color: white; z-index: 2; }
+
+        .stack-showcase { position: relative; width: 280px; height: 350px; margin: 15px auto; }
+        .stack-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 20px; object-fit: cover; border: 5px solid white; box-shadow: 0 15px 30px rgba(0,0,0,0.6); opacity: 0; transform: scale(0.8) rotate(-5deg); transition: all 1s ease; }
+        .stack-img.active { opacity: 1; transform: scale(1) rotate(0deg); }
+    </style>
 </head>
 <body>
 
@@ -15,35 +100,35 @@
 
     <div class="container">
 
-        <!-- 0. صفحة إعداد المفاجأة والرفع من التليفون -->
+        <!-- 0. صفحة صانع المفاجآت الذكي وتوليد الرابط المخصص والباركود -->
         <div id="generatorCard" class="card">
             <h2>✨ صانع المفاجآت الذكي ✨</h2>
-            <p style="margin-bottom: 10px; font-size: 0.85rem;">اختر الصور والأغنية من تليفونك، واحفظ المفاجأة:</p>
+            <p style="margin-bottom: 10px; font-size: 0.85rem;">اختر من 1 إلى 3 صور والأغنية من تليفونك لتوليد الرابط والباركود:</p>
             <input type="text" id="cfgPass" placeholder="كلمة السر الخاصة بها">
             <input type="text" id="cfgDate" placeholder="تاريخ ارتباطنا (مثال: 2024/05/12)">
             <textarea id="cfgMsg1" rows="2" placeholder="الرسالة الأولى"></textarea>
             <textarea id="cfgMsg2" rows="3" placeholder="الرسالة الكبرى الأخيرة"></textarea>
             
             <label class="file-label" for="cfgImagesFile">
-                📁 اختر الصور من الموبايل
+                📁 اختر الصور من التليفون
             </label>
             <input type="file" id="cfgImagesFile" multiple accept="image/*" style="display:none;" onchange="handleImagesSelect(this)">
             <div id="imagesCountStatus" style="font-size: 0.85rem; color: #ff758f; margin-bottom: 10px;">تم اختيار 0 صورة</div>
 
             <label class="file-label" for="cfgMusicFile">
-                🎵 اختر ملف الأغنية من الموبايل
+                🎵 اختر ملف الأغنية من التليفون
             </label>
             <input type="file" id="cfgMusicFile" accept="audio/*,video/*" style="display:none;" onchange="handleMusicSelect(this)">
             <div id="musicStatus" style="font-size: 0.85rem; color: #ff758f; margin-bottom: 10px;">لم يتم اختيار أغنية</div>
 
-            <button class="btn" onclick="saveAndStart()">حفظ وتوليد الرابط والباركود 🚀</button>
+            <button class="btn" onclick="generateCustomLinkAndQR()">توليد الرابط والباركود الخاص 🚀</button>
             
             <div id="linkOutput" style="margin-top: 15px; display: none;">
-                <p style="color: #4cd137; font-weight: bold; margin-bottom: 5px;">تم توليد الرابط والباركود بنجاح! 🎉</p>
+                <p style="color: #4cd137; font-weight: bold; margin-bottom: 5px;">تم توليد الرابط الخاص والباركود بنجاح! 🎉</p>
                 <input type="text" readonly id="siteUrlInput" onclick="this.select()">
-                <button class="btn" style="padding: 8px 18px; font-size: 0.9rem; margin-bottom: 15px;" onclick="copySiteUrl()">نسخ الرابط 📋</button>
+                <button class="btn" style="padding: 8px 18px; font-size: 0.9rem; margin-bottom: 15px;" onclick="copyCustomUrl()">نسخ الرابط الخاص 📋</button>
                 
-                <p style="font-size: 0.9rem; margin-bottom: 8px; color: var(--secondary);">باركود المفاجأة الخاص:</p>
+                <p style="font-size: 0.9rem; margin-bottom: 8px; color: var(--secondary);">الباركود الخاص بالمفاجأة (QR Code):</p>
                 <div id="qrcode" style="background: white; padding: 15px; display: inline-block; border-radius: 12px;"></div>
             </div>
         </div>
@@ -57,8 +142,6 @@
                 <button class="btn" onclick="checkPassword()">دخول ❤️</button>
             </div>
             <div id="errorArea" class="error-msg hidden">الباسورد غلط يا حبيبتي ركزي ❤️</div>
-            <br>
-            <button style="background:none; border:none; color:#aaa; font-size:0.8rem; cursor:pointer;" onclick="resetSettings()">⚙️ تعديل الإعدادات</button>
         </div>
 
         <!-- 2. المشهد السينمائي -->
@@ -123,6 +206,211 @@
 
     </div>
 
-    <script src="script.js"></script>
-</body>
-</html>
+    <script>
+        let packageData = {
+            pass: "123",
+            date: "",
+            msg1: "",
+            msg2: "",
+            images: [],
+            music: ""
+        };
+
+        let tempImages = [];
+        let tempMusic = "";
+
+        window.onload = function() {
+            const hash = window.location.hash.substring(1);
+            if (hash) {
+                try {
+                    const decoded = JSON.parse(decodeURIComponent(escape(atob(hash))));
+                    packageData = decoded;
+                    showOnly('stepPassword');
+                    return;
+                } catch(e) {}
+            }
+            showOnly('generatorCard');
+        };
+
+        function handleImagesSelect(input) {
+            const files = Array.from(input.files).slice(0, 3);
+            tempImages = [];
+            let loaded = 0;
+
+            if(files.length === 0) return;
+
+            document.getElementById('imagesCountStatus').innerText = "جاري ضغط الصور... ⏳";
+
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    compressImg(e.target.result, 250, 0.4, function(compressed) {
+                        tempImages.push(compressed);
+                        loaded++;
+                        document.getElementById('imagesCountStatus').innerText = `تم اختيار وتجهيز ${loaded} صورة بنجاح ✅`;
+                    });
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function compressImg(base64, maxW, qual, cb) {
+            const img = new Image();
+            img.src = base64;
+            img.onload = () => {
+                const cvs = document.createElement('canvas');
+                let w = img.width, h = img.height;
+                if (w > maxW) { h = Math.round((h * maxW) / w); w = maxW; }
+                cvs.width = w; cvs.height = h;
+                const ctx = cvs.getContext('2d');
+                ctx.drawImage(img, 0, 0, w, h);
+                cb(cvs.toDataURL('image/jpeg', qual));
+            };
+        }
+
+        function handleMusicSelect(input) {
+            const file = input.files[0];
+            if (file) {
+                document.getElementById('musicStatus').innerText = "جاري تجهيز الأغنية... ⏳";
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    tempMusic = e.target.result;
+                    document.getElementById('musicStatus').innerText = "تم اختيار الأغنية بنجاح 🎵";
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function generateCustomLinkAndQR() {
+            packageData = {
+                pass: document.getElementById('cfgPass').value.trim() || "123",
+                date: document.getElementById('cfgDate').value.trim() || "تاريخ ارتباطنا",
+                msg1: document.getElementById('cfgMsg1').value.trim() || "بحبك جداً يا روحي",
+                msg2: document.getElementById('cfgMsg2').value.trim() || "أنتي كل حاجة في حياتي",
+                images: tempImages.length > 0 ? tempImages : ["https://picsum.photos/300/400"],
+                music: tempMusic
+            };
+
+            try {
+                const encodedData = btoa(unescape(encodeURIComponent(JSON.stringify(packageData))));
+                const customURL = window.location.origin + window.location.pathname + '#' + encodedData;
+                
+                document.getElementById('siteUrlInput').value = customURL;
+                document.getElementById('linkOutput').style.display = 'block';
+
+                const qrContainer = document.getElementById('qrcode');
+                qrContainer.innerHTML = "";
+                new QRCode(qrContainer, {
+                    text: customURL,
+                    width: 160,
+                    height: 160,
+                    colorDark: "#0f051d",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.M
+                });
+
+            } catch(e) {
+                alert("حجم الملفات كبير، يرجى اختيار صور أقل حجماً.");
+            }
+        }
+
+        function copyCustomUrl() {
+            const copyText = document.getElementById("siteUrlInput");
+            copyText.select();
+            document.execCommand("copy");
+            alert("تم نسخ الرابط الخاص بالمفاجأة! ابعتهولها دلوقتي على الواتساب ❤️");
+        }
+
+        function showOnly(id) {
+            document.querySelectorAll('.container .card').forEach(c => c.classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        function checkPassword() {
+            const val = document.getElementById('passInput').value;
+            if (val === packageData.pass) {
+                document.getElementById('errorArea').classList.add('hidden');
+                
+                if (packageData.music) {
+                    const audio = document.getElementById('bgMusic');
+                    audio.src = packageData.music;
+                    audio.play().catch(()=>{});
+                }
+
+                showOnly('stepCinematic');
+                startCinematicSequence();
+            } else {
+                document.getElementById('errorArea').classList.remove('hidden');
+            }
+        }
+
+        function startCinematicSequence() {
+            const canvas = document.getElementById('matrixCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.parentElement.offsetWidth;
+            canvas.height = canvas.parentElement.offsetHeight;
+
+            const chars = "01 I LOVE YOU ❤️ CODE LOVE 💖";
+            const fontSize = 14;
+            const columns = canvas.width / fontSize;
+            const drops = Array(Math.floor(columns)).fill(1);
+
+            let matrixInterval = setInterval(() => {
+                ctx.fillStyle = 'rgba(15, 5, 29, 0.1)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#00ff66';
+                ctx.font = fontSize + 'px monospace';
+
+                for (let i = 0; i < drops.length; i++) {
+                    let text = chars.charAt(Math.floor(Math.random() * chars.length));
+                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                    drops[i]++;
+                }
+            }, 50);
+
+            setTimeout(() => {
+                clearInterval(matrixInterval);
+                canvas.style.display = 'none';
+                document.getElementById('heartShapeContainer').classList.add('show');
+
+                setTimeout(() => {
+                    document.getElementById('hugContainer').classList.add('show');
+                    document.getElementById('btnAfterCinematic').classList.remove('hidden');
+                }, 1500);
+
+            }, 7000);
+        }
+
+        function goToStep(stepId) {
+            showOnly(stepId);
+            if (stepId === 'stepMsg1Container') {
+                typeEffect('typingMsg1', packageData.msg1, () => {
+                    document.getElementById('btnAfterMsg1').classList.remove('hidden');
+                });
+            } else if (stepId === 'stepAlbum') {
+                setupAlbum();
+            } else if (stepId === 'stepMsg2Container') {
+                typeEffect('typingMsg2', packageData.msg2, () => {
+                    document.getElementById('btnAfterMsg2').classList.remove('hidden');
+                });
+            }
+        }
+
+        function typeEffect(elementId, text, callback) {
+            const el = document.getElementById(elementId);
+            el.innerHTML = "";
+            let i = 0;
+            const timer = setInterval(() => {
+                if (i < text.length) {
+                    el.innerHTML += text.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(timer);
+                    if (callback) callback();
+                }
+            }, 50);
+        }
+
+        function setupAlbum() {
+            document.getElementById('displayDate').innerText
