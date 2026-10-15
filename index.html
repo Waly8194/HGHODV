@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مفاجأة خاصة جداً ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&family=Amiri:ital,wght@0,700;1,400&family=Great+Vibes&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- مكتبة توليد الـ QR Code السريعة -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+
+    <audio id="bgMusic" loop></audio>
+
+    <div class="container">
+
+        <!-- 0. صفحة إعداد المفاجأة والرفع من التليفون -->
+        <div id="generatorCard" class="card">
+            <h2>✨ صانع المفاجآت الذكي ✨</h2>
+            <p style="margin-bottom: 10px; font-size: 0.85rem;">اختر الصور والأغنية من تليفونك، واحفظ المفاجأة:</p>
+            <input type="text" id="cfgPass" placeholder="كلمة السر الخاصة بها">
+            <input type="text" id="cfgDate" placeholder="تاريخ ارتباطنا (مثال: 2024/05/12)">
+            <textarea id="cfgMsg1" rows="2" placeholder="الرسالة الأولى"></textarea>
+            <textarea id="cfgMsg2" rows="3" placeholder="الرسالة الكبرى الأخيرة"></textarea>
+            
+            <label class="file-label" for="cfgImagesFile">
+                📁 اختر الصور من الموبايل
+            </label>
+            <input type="file" id="cfgImagesFile" multiple accept="image/*" style="display:none;" onchange="handleImagesSelect(this)">
+            <div id="imagesCountStatus" style="font-size: 0.85rem; color: #ff758f; margin-bottom: 10px;">تم اختيار 0 صورة</div>
+
+            <label class="file-label" for="cfgMusicFile">
+                🎵 اختر ملف الأغنية من الموبايل
+            </label>
+            <input type="file" id="cfgMusicFile" accept="audio/*,video/*" style="display:none;" onchange="handleMusicSelect(this)">
+            <div id="musicStatus" style="font-size: 0.85rem; color: #ff758f; margin-bottom: 10px;">لم يتم اختيار أغنية</div>
+
+            <button class="btn" onclick="saveAndStart()">حفظ وتوليد الرابط والباركود 🚀</button>
+            
+            <div id="linkOutput" style="margin-top: 15px; display: none;">
+                <p style="color: #4cd137; font-weight: bold; margin-bottom: 5px;">تم توليد الرابط والباركود بنجاح! 🎉</p>
+                <input type="text" readonly id="siteUrlInput" onclick="this.select()">
+                <button class="btn" style="padding: 8px 18px; font-size: 0.9rem; margin-bottom: 15px;" onclick="copySiteUrl()">نسخ الرابط 📋</button>
+                
+                <p style="font-size: 0.9rem; margin-bottom: 8px; color: var(--secondary);">باركود المفاجأة الخاص:</p>
+                <div id="qrcode" style="background: white; padding: 15px; display: inline-block; border-radius: 12px;"></div>
+            </div>
+        </div>
+
+        <!-- 1. شاشة الباسورد -->
+        <div id="stepPassword" class="card hidden">
+            <h2>🔒 كلمة السر يا حلوة</h2>
+            <p style="margin: 10px 0;">اكتبي الباسورد الخاص بينا علشان تفتحي المفاجأة:</p>
+            <div class="password-box">
+                <input type="password" id="passInput" placeholder="أدخلي كلمة السر...">
+                <button class="btn" onclick="checkPassword()">دخول ❤️</button>
+            </div>
+            <div id="errorArea" class="error-msg hidden">الباسورد غلط يا حبيبتي ركزي ❤️</div>
+            <br>
+            <button style="background:none; border:none; color:#aaa; font-size:0.8rem; cursor:pointer;" onclick="resetSettings()">⚙️ تعديل الإعدادات</button>
+        </div>
+
+        <!-- 2. المشهد السينمائي -->
+        <div id="stepCinematic" class="card hidden" style="position: relative; overflow: hidden;">
+            <canvas id="matrixCanvas"></canvas>
+            <div class="cinematic-scene">
+                <div id="heartShapeContainer" class="heart-grid">
+                    <div></div><div>I Love You</div><div>❤️</div><div>I Love You</div><div></div>
+                    <div>I Love You</div><div>I Love You</div><div>I Love You</div><div>I Love You</div><div>I Love You</div>
+                    <div>I Love You</div><div>I Love You</div><div>I Love You</div><div>I Love You</div><div>I Love You</div>
+                    <div></div><div>I Love You</div><div>Forever</div><div>I Love You</div><div></div>
+                    <div></div><div></div><div>I Love You</div><div></div><div></div>
+                </div>
+
+                <div id="hugContainer" class="hug-art-container">
+                    <div class="forever-text">I will love you forever</div>
+                    <svg class="hug-svg" viewBox="0 0 100 100">
+                        <path d="M 35 30 C 35 15, 50 15, 50 30 C 50 15, 65 15, 65 30 C 65 50, 50 65, 50 80 C 50 65, 35 50, 35 30 Z" fill="rgba(255, 77, 109, 0.2)" stroke="#ff4d6d" stroke-width="1.5"/>
+                        <path d="M 30 55 C 35 40, 45 45, 50 50 C 55 45, 65 40, 70 55 C 60 70, 50 75, 50 85 C 50 75, 40 70, 30 55 Z" fill="none" stroke="#ff758f" stroke-width="2"/>
+                    </svg>
+                </div>
+            </div>
+            <button id="btnAfterCinematic" class="btn hidden" onclick="goToStep('stepMsg1Container')">متابعة العرض ✨</button>
+        </div>
+
+        <!-- 3. الرسالة الأولى -->
+        <div id="stepMsg1Container" class="card hidden">
+            <div id="typingMsg1" style="font-size: 1.15rem; line-height: 1.8; min-height: 80px;"></div>
+            <button id="btnAfterMsg1" class="btn hidden" onclick="goToStep('stepAlbum')">اضغطي يا روحي علشان نكمل ❤️</button>
+        </div>
+
+        <!-- 4. الألبوم -->
+        <div id="stepAlbum" class="card hidden">
+            <h3 id="displayDate" style="color: var(--secondary); margin-bottom: 10px;"></h3>
+            <div class="album-container" id="albumContainer"></div>
+            <p style="font-size: 0.85rem; opacity: 0.8;">اضغطي على الصورة للتقليب 📖</p>
+            <button id="btnAfterAlbum" class="btn" onclick="goToStep('stepEnvelope')">اضغطي علشان نكمل يا قطتي 🐾</button>
+        </div>
+
+        <!-- 5. الظرف -->
+        <div id="stepEnvelope" class="card hidden">
+            <p style="line-height: 1.7; font-size: 1.05rem; margin-bottom: 15px;">
+                كتبتلك الرسالة دي وانا متأكد أن حبي ليك عمره ما هيقل وعاوزك تعرفي اني اي حاجه بعملها هتبقا علشانك و علشان بحبك يا قطتي ❤️
+            </p>
+            <div class="envelope" onclick="goToStep('stepMsg2Container')">
+                <div class="envelope-heart">✉️</div>
+            </div>
+            <button class="btn" onclick="goToStep('stepMsg2Container')">افتح 💌</button>
+        </div>
+
+        <!-- 6. الرسالة الأخيرة -->
+        <div id="stepMsg2Container" class="card hidden">
+            <div id="typingMsg2" style="font-size: 1.1rem; line-height: 1.9; min-height: 100px;"></div>
+            <button id="btnAfterMsg2" class="btn hidden" onclick="startFinalShowcase()">العرض الأخير يا روحي اضغطي 🎬</button>
+        </div>
+
+        <!-- 7. العرض الخِتامي -->
+        <div id="stepFinalShowcase" class="card hidden">
+            <h2>بحبك يا أحلى حاجة في حياتي ❤️</h2>
+            <div class="stack-showcase" id="stackShowcase"></div>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
